@@ -88,6 +88,10 @@ export function isBoardFull(state: GameState): boolean {
   return state.board.every((row)=>row.every((tile)=>tile.type!=='empty'));
 }
 
+export function hasPlaceableTilesRemaining(state: GameState): boolean {
+  return state.market.length > 0 || state.deck.length > 0;
+}
+
 export function applyMove(state: GameState, pos: Coord, marketIndex: number): ScoreBreakdown | null {
   if (state.gameOver) return null;
   if (state.board[pos.r][pos.c].type !== 'empty') return null;
@@ -115,7 +119,7 @@ export function applyMove(state: GameState, pos: Coord, marketIndex: number): Sc
   state.lastGainPos = pos;
   state.currentPlayer = state.currentPlayer === 0 ? 1 : 0;
   state.selectedMarketIndex = null;
-  state.gameOver = isBoardFull(state);
+  state.gameOver = isBoardFull(state) || !hasPlaceableTilesRemaining(state);
   return breakdown;
 }
 

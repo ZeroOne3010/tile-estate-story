@@ -8,6 +8,7 @@ Tile Estate Story is a browser-only, local 2-player turn-based tile placement ga
 - Choose one of 3 market tiles and place on an empty block.
 - Score immediately based on neighbors and upgrades.
 - Game ends when board is full; higher score wins.
+- Game also ends if no placeable market/deck tiles remain.
 
 ## Current rules
 - Tile types: residential, commercial, industrial, improvement, bus stop.
