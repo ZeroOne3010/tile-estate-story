@@ -7,6 +7,7 @@ import { render } from './ui';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 if (!app) throw new Error('App root missing');
+const appRoot: HTMLElement = app;
 
 let state: GameState = loadState() ?? createInitialState();
 let lang: Language = detectLanguage();
@@ -18,7 +19,7 @@ function redraw() {
   const breakdown = state.selectedMarketIndex !== null && previewPos
     ? previewScore(state, previewPos, state.market[state.selectedMarketIndex])
     : null;
-  render(app, state, lang, { pos: previewPos, breakdown });
+  render(appRoot, state, lang, { pos: previewPos, breakdown });
   bindEvents();
 }
 
@@ -29,15 +30,15 @@ function onGameOverCheck() {
 }
 
 function bindEvents() {
-  app.querySelector('#lang')?.addEventListener('click', () => { lang = lang === 'en' ? 'fi' : 'en'; setLanguage(lang); redraw(); });
-  app.querySelector('#newGame')?.addEventListener('click', () => { state = createInitialState(); persist(); redraw(); });
-  app.querySelector('#undo')?.addEventListener('click', () => { if (undoMove(state)) { persist(); redraw(); } });
+appRoot.querySelector('#lang')?.addEventListener('click', () => { lang = lang === 'en' ? 'fi' : 'en'; setLanguage(lang); redraw(); });
+appRoot.querySelector('#newGame')?.addEventListener('click', () => { state = createInitialState(); persist(); redraw(); });
+appRoot.querySelector('#undo')?.addEventListener('click', () => { if (undoMove(state)) { persist(); redraw(); } });
 
-  app.querySelectorAll<HTMLElement>('.market-tile').forEach((el) => {
+appRoot.querySelectorAll<HTMLElement>('.market-tile').forEach((el) => {
     el.addEventListener('click', () => { state.selectedMarketIndex = Number(el.dataset.market); redraw(); });
   });
 
-  app.querySelectorAll<HTMLElement>('.cell').forEach((el) => {
+appRoot.querySelectorAll<HTMLElement>('.cell').forEach((el) => {
     const pos = { r: Number(el.dataset.r), c: Number(el.dataset.c) };
     el.addEventListener('pointerenter', () => { previewPos = pos; redraw(); });
     el.addEventListener('click', () => {
