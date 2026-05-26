@@ -31,6 +31,12 @@ npm run build
 npm run preview
 ```
 
+## Tile PNG cleanup + optimization pipeline
+- `npm run process:tiles` scans `public/assets/tiles/*.png` and writes cleaned/optimized PNGs to `public/assets/tiles-processed/`.
+- Any near-black edge pixels are converted to transparency automatically (default threshold: `28`).
+- You can tune threshold per run with `TILE_BLACK_THRESHOLD`, e.g. `TILE_BLACK_THRESHOLD=20 npm run process:tiles`.
+- `npm run build` now runs this processing step automatically before TypeScript/Vite build.
+
 ## GitHub Pages deploy
 - Workflow: `.github/workflows/deploy.yml`.
 - `vite.config.ts` sets base to `/tile-estate-story/` on GitHub Actions and `/` locally.

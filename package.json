@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "build": "npm run process:tiles && tsc && vite build",
+    "preview": "vite preview",
+    "process:tiles": "node scripts/process-tiles.mjs"
   },
   "devDependencies": {
     "typescript": "^5.9.0",
