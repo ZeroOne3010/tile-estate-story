@@ -1,10 +1,10 @@
-:root{font-family:system-ui,sans-serif;color:#111827;background:#f8fafc;--board-size:1254;--board-edge:80;--board-tile:121;--board-road:20}
+:root{font-family:system-ui,sans-serif;color:#111827;background:#f8fafc;--board-size:1254;--board-edge:80;--board-tile:121;--board-road:20;--board-inner:calc(var(--board-size) - (2 * var(--board-edge)))}
 *{box-sizing:border-box} body{margin:0} .layout{max-width:560px;margin:0 auto;padding:10px;display:grid;gap:10px}
 header h1{margin:0 0 4px;font-size:1.4rem}.controls{display:flex;gap:6px}.scores{display:flex;justify-content:space-between}
 .board{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));
   padding:calc(var(--board-edge) / var(--board-size) * 100%);
-  column-gap:calc(var(--board-road) / var(--board-size) * 100%);
-  row-gap:calc(var(--board-road) / var(--board-size) * 100%);
+  column-gap:calc(var(--board-road) / var(--board-inner) * 100%);
+  row-gap:calc(var(--board-road) / var(--board-inner) * 100%);
   aspect-ratio:1/1;
   background-image:url('/assets/board.png');
   background-size:100% 100%;
