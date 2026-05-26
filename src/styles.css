@@ -5,4 +5,6 @@ header h1{margin:0 0 4px;font-size:1.4rem}.controls{display:flex;gap:6px}.scores
 .cell img,.market-tile img{width:100%;height:100%;object-fit:cover;display:block}.cell span,.market-tile span{position:absolute;inset:auto 0 2px 0;text-align:center;font-size:.65rem;text-shadow:0 1px 2px #000}
 .cell.fallback img,.market-tile.fallback img{display:none}.cell.upgraded{outline:3px solid #f97316}.market{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.selected{outline:3px solid #22c55e}
 .preview{min-height:1.4rem;font-weight:600}.banner{padding:6px;background:#fee2e2;border-radius:6px;font-weight:700}
+.scoring-hints ul{margin:.25rem 0 0;padding-left:1.1rem;display:grid;gap:.45rem}
+.scoring-hints li{line-height:1.35}
 @media (min-width:700px){.layout{max-width:760px}}

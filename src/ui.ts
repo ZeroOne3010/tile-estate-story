@@ -25,6 +25,16 @@ export function render(app: HTMLElement, state: GameState, lang: Language, previ
     <section class="preview">${preview.breakdown?`+${preview.breakdown.points}: ${preview.breakdown.reasons.join(' + ')}`:(state.selectedMarketIndex===null?t(lang,'selectTile'):t(lang,'hoverHint'))}</section>
     <section><h2>${t(lang,'market')}</h2><div id="market" class="market"></div></section>
     <section><h3>${t(lang,'highScores')}</h3><ol>${hs.map((e)=>`<li>${e.date}: ${e.p1}-${e.p2}</li>`).join('')}</ol></section>
+    <section class="scoring-hints">
+      <h3>${t(lang,'scoringHintsTitle')}</h3>
+      <ul>
+        <li><strong>${t(lang,'scoringResidential')}</strong><br/>${t(lang,'scoringResidentialBody')}</li>
+        <li><strong>${t(lang,'scoringIndustrial')}</strong><br/>${t(lang,'scoringIndustrialBody')}</li>
+        <li><strong>${t(lang,'scoringCommercial')}</strong><br/>${t(lang,'scoringCommercialBody')}</li>
+        <li><strong>${t(lang,'scoringImprovement')}</strong><br/>${t(lang,'scoringImprovementBody')}</li>
+        <li><strong>${t(lang,'scoringUpgraded')}</strong><br/>${t(lang,'scoringUpgradedBody')}</li>
+      </ul>
+    </section>
   </main>`;
 
   const boardEl = app.querySelector('#board') as HTMLElement;
