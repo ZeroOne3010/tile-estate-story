@@ -13,11 +13,11 @@ function tileAsset(tile: Tile): string {
   return `${base}assets/tiles/${tile.type}-${tile.level}.png`;
 }
 
-export function render(app: HTMLElement, state: GameState, lang: Language, preview: {pos: Coord | null; breakdown: ScoreBreakdown | null}): void {
+export function render(app: HTMLElement, state: GameState, lang: Language, showTileText: boolean, preview: {pos: Coord | null; breakdown: ScoreBreakdown | null}): void {
   const hs = loadHighScores();
   app.innerHTML = `
   <main class="layout">
-    <header><h1>${t(lang,'title')}</h1><div class="controls"><button id="lang">${lang.toUpperCase()}</button><button id="newGame">${t(lang,'newGame')}</button><button id="undo">${t(lang,'undo')}</button></div>
+    <header><h1>${t(lang,'title')}</h1><div class="controls"><button id="lang">${lang.toUpperCase()}</button><button id="toggleTileText">${showTileText ? t(lang,'tileTextOn') : t(lang,'tileTextOff')}</button><button id="newGame">${t(lang,'newGame')}</button><button id="undo">${t(lang,'undo')}</button></div>
     <div class="status">${t(lang,'currentPlayer')}: <strong>${state.currentPlayer===0?t(lang,'p1'):t(lang,'p2')}</strong></div>
     <div class="scores"><span>${t(lang,'p1')}: ${state.scores[0]}</span><span>${t(lang,'p2')}: ${state.scores[1]}</span></div>
     ${state.gameOver?`<div class="banner">${t(lang,'gameOver')}</div>`:''}</header>
@@ -43,9 +43,11 @@ export function render(app: HTMLElement, state: GameState, lang: Language, previ
     btn.className = `cell ${cell.type} ${cell.level===2?'upgraded':''}`;
     btn.dataset.r = String(r); btn.dataset.c = String(c);
     btn.style.backgroundColor = TILE_COLORS[cell.type] ?? '#ddd';
-    btn.innerHTML = `<img alt="${cell.type}" src="${tileAsset(cell)}"/><span>${tileLabel(lang, cell.type)}</span>`;
-    const img = btn.querySelector('img') as HTMLImageElement;
-    img.onerror = () => { img.style.display = 'none'; btn.classList.add('fallback'); };
+    if (cell.type !== 'empty') {
+      btn.innerHTML = `<img alt="${cell.type}" src="${tileAsset(cell)}"/>${showTileText ? `<span>${tileLabel(lang, cell.type)}</span>` : ''}`;
+      const img = btn.querySelector('img') as HTMLImageElement;
+      img.onerror = () => { img.style.display = 'none'; btn.classList.add('fallback'); };
+    }
     if (cell.type !== 'empty') btn.disabled = true;
     boardEl.appendChild(btn);
   }));
