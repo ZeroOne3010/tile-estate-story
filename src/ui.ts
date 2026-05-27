@@ -42,7 +42,7 @@ export function render(app: HTMLElement, state: GameState, lang: Language, showT
     const btn = document.createElement('button');
     btn.className = `cell ${cell.type} ${cell.level===2?'upgraded':''}`;
     btn.dataset.r = String(r); btn.dataset.c = String(c);
-    btn.style.backgroundColor = TILE_COLORS[cell.type] ?? '#ddd';
+    if (cell.type !== 'empty') btn.style.backgroundColor = TILE_COLORS[cell.type] ?? '#ddd';
     if (cell.type !== 'empty') {
       btn.innerHTML = `<img alt="${cell.type}" src="${tileAsset(cell)}"/>${showTileText ? `<span>${tileLabel(lang, cell.type)}</span>` : ''}`;
       const img = btn.querySelector('img') as HTMLImageElement;
