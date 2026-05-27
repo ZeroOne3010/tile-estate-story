@@ -23,6 +23,9 @@ const dict = {
     tileTextOff: 'Tile text: Off',
     latestScore: 'Latest score',
     latestScoreEmpty: 'Latest score will appear here.',
+    enterPlayer1: 'Enter Player 1 name',
+    enterPlayer2: 'Enter Player 2 name',
+    tileCounts: 'Tiles left in deck',
   },
   fi: {
     title: 'Tile Estate Story', currentPlayer: 'Vuorossa', p1: 'Pelaaja 1', p2: 'Pelaaja 2',
@@ -44,6 +47,9 @@ const dict = {
     tileTextOff: 'Laattateksti: Pois',
     latestScore: 'Viimeisin pisteytys',
     latestScoreEmpty: 'Viimeisin pisteytys näkyy tässä.',
+    enterPlayer1: 'Anna Pelaaja 1 nimi',
+    enterPlayer2: 'Anna Pelaaja 2 nimi',
+    tileCounts: 'Pakassa jäljellä olevat laatat',
   },
 } as const;
 

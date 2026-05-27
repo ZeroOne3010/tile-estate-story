@@ -38,6 +38,7 @@ export interface GameState {
   gameOver: boolean;
   busStops: [Coord, Coord];
   history: MoveRecord[];
+  playerNames: [string, string];
 }
 
 export interface ScoreBreakdown {

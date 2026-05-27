@@ -12,10 +12,14 @@ export function createInitialState(): GameState {
   for (const p of busStops) board[p.r][p.c] = { type: 'busStop', level: 1, fixed: true };
   board[1][2] = { type: 'residential', level: 1, fixed: true };
   board[6][5] = { type: 'commercial', level: 1, fixed: true };
+  board[0][1] = { type: 'improvement', level: 1, fixed: true };
+  board[1][0] = { type: 'industrial', level: 1, fixed: true };
+  board[6][7] = { type: 'residential', level: 1, fixed: true };
+  board[7][6] = { type: 'industrial', level: 1, fixed: true };
 
   const deck = createDeck();
   const market = drawTiles(deck, 3);
-  return { board, currentPlayer: 0, scores: [0,0], market, deck, selectedMarketIndex: null, lastGain: 0, lastGainPos: null, gameOver: false, busStops, history: [] };
+  return { board, currentPlayer: 0, scores: [0,0], market, deck, selectedMarketIndex: null, lastGain: 0, lastGainPos: null, gameOver: false, busStops, history: [], playerNames: ['Player 1', 'Player 2'] };
 }
 
 function inBounds(r:number,c:number){return r>=0&&c>=0&&r<BOARD_SIZE&&c<BOARD_SIZE;}
