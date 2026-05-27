@@ -35,3 +35,5 @@ header h1{margin:0 0 4px;font-size:1.4rem}.controls{display:flex;gap:6px}.scores
 .scoring-hints ul{margin:.25rem 0 0;padding-left:1.1rem;display:grid;gap:.45rem}
 .scoring-hints li{line-height:1.35}
 @media (min-width:700px){.layout{max-width:760px}}
+
+.tile-counts{margin-top:.5rem;font-size:.9rem;color:#334155}

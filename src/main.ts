@@ -10,6 +10,7 @@ if (!app) throw new Error('App root missing');
 const appRoot: HTMLElement = app;
 
 let state: GameState = loadState() ?? createInitialState();
+if (!state.playerNames) state.playerNames = ['Player 1', 'Player 2'];
 let lang: Language = detectLanguage();
 let previewPos: Coord | null = null;
 let latestScore: { player: 0 | 1; points: number; reasons: string[]; pos: Coord } | null = null;
@@ -35,7 +36,15 @@ function onGameOverCheck() {
 function bindEvents() {
 appRoot.querySelector('#lang')?.addEventListener('click', () => { lang = lang === 'en' ? 'fi' : 'en'; setLanguage(lang); redraw(); });
 appRoot.querySelector('#toggleTileText')?.addEventListener('click', () => { showTileText = !showTileText; localStorage.setItem(TILE_TEXT_KEY, showTileText ? '1' : '0'); redraw(); });
-appRoot.querySelector('#newGame')?.addEventListener('click', () => { latestScore = null; state = createInitialState(); persist(); redraw(); });
+appRoot.querySelector('#newGame')?.addEventListener('click', () => { latestScore = null; state = createInitialState(); state.playerNames = [...state.playerNames]; persist(); redraw(); });
+appRoot.querySelector('#setPlayers')?.addEventListener('click', () => {
+  const p1 = prompt(lang === 'fi' ? 'Anna Pelaaja 1 nimi' : 'Enter Player 1 name', state.playerNames[0])?.trim();
+  const p2 = prompt(lang === 'fi' ? 'Anna Pelaaja 2 nimi' : 'Enter Player 2 name', state.playerNames[1])?.trim();
+  if (p1) state.playerNames[0] = p1;
+  if (p2) state.playerNames[1] = p2;
+  persist();
+  redraw();
+});
 appRoot.querySelector('#undo')?.addEventListener('click', () => { if (undoMove(state)) { latestScore = null; persist(); redraw(); } });
 
 appRoot.querySelectorAll<HTMLElement>('.market-tile').forEach((el) => {
