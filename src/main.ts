@@ -12,6 +12,8 @@ const appRoot: HTMLElement = app;
 let state: GameState = loadState() ?? createInitialState();
 let lang: Language = detectLanguage();
 let previewPos: Coord | null = null;
+const TILE_TEXT_KEY = 'tileEstateStory.showTileText';
+let showTileText = localStorage.getItem(TILE_TEXT_KEY) !== '0';
 
 function persist() { saveState(state); }
 
@@ -19,7 +21,7 @@ function redraw() {
   const breakdown = state.selectedMarketIndex !== null && previewPos
     ? previewScore(state, previewPos, state.market[state.selectedMarketIndex])
     : null;
-  render(appRoot, state, lang, { pos: previewPos, breakdown });
+  render(appRoot, state, lang, showTileText, { pos: previewPos, breakdown });
   bindEvents();
 }
 
@@ -31,6 +33,7 @@ function onGameOverCheck() {
 
 function bindEvents() {
 appRoot.querySelector('#lang')?.addEventListener('click', () => { lang = lang === 'en' ? 'fi' : 'en'; setLanguage(lang); redraw(); });
+appRoot.querySelector('#toggleTileText')?.addEventListener('click', () => { showTileText = !showTileText; localStorage.setItem(TILE_TEXT_KEY, showTileText ? '1' : '0'); redraw(); });
 appRoot.querySelector('#newGame')?.addEventListener('click', () => { state = createInitialState(); persist(); redraw(); });
 appRoot.querySelector('#undo')?.addEventListener('click', () => { if (undoMove(state)) { persist(); redraw(); } });
 

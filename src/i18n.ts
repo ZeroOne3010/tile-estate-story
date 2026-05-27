@@ -19,6 +19,8 @@ const dict = {
     scoringImprovementBody: '+1 per 2 occupied neighbors (8-neighborhood, rounded up).',
     scoringUpgraded: '⭐ Upgraded tiles',
     scoringUpgradedBody: '+1 extra adjacency value.',
+    tileTextOn: 'Tile text: On',
+    tileTextOff: 'Tile text: Off',
   },
   fi: {
     title: 'Tile Estate Story', currentPlayer: 'Vuorossa', p1: 'Pelaaja 1', p2: 'Pelaaja 2',
@@ -36,12 +38,14 @@ const dict = {
     scoringImprovementBody: '+1 per 2 varattua naapuria (8-naapurusto, pyöristys ylöspäin).',
     scoringUpgraded: '⭐ Päivitetyt laatat',
     scoringUpgradedBody: '+1 lisäarvo viereisyydestä.',
+    tileTextOn: 'Laattateksti: Päällä',
+    tileTextOff: 'Laattateksti: Pois',
   },
 } as const;
 
 const tileLabels: Record<Language, Record<TileType, string>> = {
   en: { empty:'EMP', residential:'RES', commercial:'COM', industrial:'IND', improvement:'IMP', busStop:'BUS' },
-  fi: { empty:'TYH', residential:'ASU', commercial:'LII', industrial:'TEH', improvement:'PAR', busStop:'BUS' },
+  fi: { empty:'TYH', residential:'ASU', commercial:'KAUP', industrial:'TEH', improvement:'PUIS', busStop:'BUS' },
 };
 
 export function detectLanguage(): Language {
