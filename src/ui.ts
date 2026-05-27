@@ -1,4 +1,4 @@
-import { t } from './i18n';
+import { t, tileLabel } from './i18n';
 import type { Coord, GameState, Language, ScoreBreakdown, Tile, TileType } from './model';
 import { loadHighScores } from './storage';
 
@@ -11,6 +11,16 @@ function tileAsset(tile: Tile): string {
   if (tile.type === 'empty') return `${base}assets/tiles/empty.png`;
   if (tile.type === 'busStop') return `${base}assets/tiles/bus-stop.png`;
   return `${base}assets/tiles/${tile.type}-${tile.level}.png`;
+}
+
+
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 function reasonLabel(lang: Language, reason: string): string {
@@ -35,7 +45,9 @@ export function render(
   latestScore: { player: 0 | 1; points: number; reasons: string[]; pos: Coord } | null,
 ): void {
   const hs = loadHighScores();
-  const [p1Name, p2Name] = state.playerNames;
+  const [p1NameRaw, p2NameRaw] = state.playerNames;
+  const p1Name = escapeHtml(p1NameRaw);
+  const p2Name = escapeHtml(p2NameRaw);
   const remainingCounts = {
     residential: state.deck.filter((x) => x.type === 'residential').length,
     commercial: state.deck.filter((x) => x.type === 'commercial').length,
@@ -66,7 +78,7 @@ export function render(
     btn.dataset.r = String(r); btn.dataset.c = String(c);
     if (cell.type !== 'empty') btn.style.backgroundColor = TILE_COLORS[cell.type] ?? '#ddd';
     if (cell.type !== 'empty') {
-      btn.innerHTML = `<img alt="${cell.type}" src="${tileAsset(cell)}"/>${showTileText ? `<span>${cell.type}</span>` : ''}`;
+      btn.innerHTML = `<img alt="${cell.type}" src="${tileAsset(cell)}"/>${showTileText ? `<span>${tileLabel(lang, cell.type)}</span>` : ''}`;
       const img = btn.querySelector('img') as HTMLImageElement;
       img.onerror = () => { img.style.display = 'none'; btn.classList.add('fallback'); };
     }
@@ -83,7 +95,7 @@ export function render(
     b.className = `market-tile ${state.selectedMarketIndex===i?'selected':''}`;
     b.dataset.market = String(i);
     b.style.backgroundColor = TILE_COLORS[tile.type];
-    b.innerHTML = `<img alt="${tile.type}" src="${tileAsset(tile)}"/><span>${tile.type}</span>`;
+    b.innerHTML = `<img alt="${tile.type}" src="${tileAsset(tile)}"/><span>${tileLabel(lang, tile.type)}</span>`;
     const img = b.querySelector('img') as HTMLImageElement;
     img.onerror = () => { img.style.display = 'none'; b.classList.add('fallback'); };
     marketEl.appendChild(b);

@@ -36,7 +36,7 @@ function onGameOverCheck() {
 function bindEvents() {
 appRoot.querySelector('#lang')?.addEventListener('click', () => { lang = lang === 'en' ? 'fi' : 'en'; setLanguage(lang); redraw(); });
 appRoot.querySelector('#toggleTileText')?.addEventListener('click', () => { showTileText = !showTileText; localStorage.setItem(TILE_TEXT_KEY, showTileText ? '1' : '0'); redraw(); });
-appRoot.querySelector('#newGame')?.addEventListener('click', () => { latestScore = null; state = createInitialState(); state.playerNames = [...state.playerNames]; persist(); redraw(); });
+appRoot.querySelector('#newGame')?.addEventListener('click', () => { const existingNames = [...state.playerNames] as [string, string]; latestScore = null; state = createInitialState(); state.playerNames = existingNames; persist(); redraw(); });
 appRoot.querySelector('#setPlayers')?.addEventListener('click', () => {
   const p1 = prompt(lang === 'fi' ? 'Anna Pelaaja 1 nimi' : 'Enter Player 1 name', state.playerNames[0])?.trim();
   const p2 = prompt(lang === 'fi' ? 'Anna Pelaaja 2 nimi' : 'Enter Player 2 name', state.playerNames[1])?.trim();
