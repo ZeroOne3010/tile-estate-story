@@ -13,7 +13,14 @@ function tileAsset(tile: Tile): string {
   return `${base}assets/tiles/${tile.type}-${tile.level}.png`;
 }
 
-export function render(app: HTMLElement, state: GameState, lang: Language, showTileText: boolean, preview: {pos: Coord | null; breakdown: ScoreBreakdown | null}): void {
+export function render(
+  app: HTMLElement,
+  state: GameState,
+  lang: Language,
+  showTileText: boolean,
+  preview: {pos: Coord | null; breakdown: ScoreBreakdown | null},
+  latestScore: { player: 0 | 1; points: number; reasons: string[]; pos: Coord } | null,
+): void {
   const hs = loadHighScores();
   app.innerHTML = `
   <main class="layout">
@@ -23,6 +30,11 @@ export function render(app: HTMLElement, state: GameState, lang: Language, showT
     ${state.gameOver?`<div class="banner">${t(lang,'gameOver')}</div>`:''}</header>
     <section id="board" class="board"></section>
     <section class="preview">${preview.breakdown?`+${preview.breakdown.points}: ${preview.breakdown.reasons.join(' + ')}`:(state.selectedMarketIndex===null?t(lang,'selectTile'):t(lang,'hoverHint'))}</section>
+    <section class="latest-score">${
+      latestScore
+        ? `${t(lang, 'latestScore')}: ${latestScore.player === 0 ? t(lang, 'p1') : t(lang, 'p2')} +${latestScore.points}${latestScore.reasons.length ? ` (${latestScore.reasons.slice(0, 3).join(' + ')})` : ''}`
+        : t(lang, 'latestScoreEmpty')
+    }</section>
     <section><h2>${t(lang,'market')}</h2><div id="market" class="market"></div></section>
     <section><h3>${t(lang,'highScores')}</h3><ol>${hs.map((e)=>`<li>${e.date}: ${e.p1}-${e.p2}</li>`).join('')}</ol></section>
     <section class="scoring-hints">
@@ -47,6 +59,9 @@ export function render(app: HTMLElement, state: GameState, lang: Language, showT
       btn.innerHTML = `<img alt="${cell.type}" src="${tileAsset(cell)}"/>${showTileText ? `<span>${tileLabel(lang, cell.type)}</span>` : ''}`;
       const img = btn.querySelector('img') as HTMLImageElement;
       img.onerror = () => { img.style.display = 'none'; btn.classList.add('fallback'); };
+    }
+    if (latestScore && latestScore.pos.r === r && latestScore.pos.c === c && latestScore.points > 0) {
+      btn.insertAdjacentHTML('beforeend', `<span class="score-pop">+${latestScore.points}</span>`);
     }
     if (cell.type !== 'empty') btn.disabled = true;
     boardEl.appendChild(btn);
