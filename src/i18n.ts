@@ -21,6 +21,8 @@ const dict = {
     scoringUpgradedBody: '+1 extra adjacency value.',
     tileTextOn: 'Tile text: On',
     tileTextOff: 'Tile text: Off',
+    latestScore: 'Latest score',
+    latestScoreEmpty: 'Latest score will appear here.',
   },
   fi: {
     title: 'Tile Estate Story', currentPlayer: 'Vuorossa', p1: 'Pelaaja 1', p2: 'Pelaaja 2',
@@ -40,6 +42,8 @@ const dict = {
     scoringUpgradedBody: '+1 lisäarvo viereisyydestä.',
     tileTextOn: 'Laattateksti: Päällä',
     tileTextOff: 'Laattateksti: Pois',
+    latestScore: 'Viimeisin pisteytys',
+    latestScoreEmpty: 'Viimeisin pisteytys näkyy tässä.',
   },
 } as const;
 

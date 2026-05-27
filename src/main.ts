@@ -12,6 +12,7 @@ const appRoot: HTMLElement = app;
 let state: GameState = loadState() ?? createInitialState();
 let lang: Language = detectLanguage();
 let previewPos: Coord | null = null;
+let latestScore: { player: 0 | 1; points: number; reasons: string[]; pos: Coord } | null = null;
 const TILE_TEXT_KEY = 'tileEstateStory.showTileText';
 let showTileText = localStorage.getItem(TILE_TEXT_KEY) !== '0';
 
@@ -21,7 +22,7 @@ function redraw() {
   const breakdown = state.selectedMarketIndex !== null && previewPos
     ? previewScore(state, previewPos, state.market[state.selectedMarketIndex])
     : null;
-  render(appRoot, state, lang, showTileText, { pos: previewPos, breakdown });
+  render(appRoot, state, lang, showTileText, { pos: previewPos, breakdown }, latestScore);
   bindEvents();
 }
 
@@ -34,8 +35,8 @@ function onGameOverCheck() {
 function bindEvents() {
 appRoot.querySelector('#lang')?.addEventListener('click', () => { lang = lang === 'en' ? 'fi' : 'en'; setLanguage(lang); redraw(); });
 appRoot.querySelector('#toggleTileText')?.addEventListener('click', () => { showTileText = !showTileText; localStorage.setItem(TILE_TEXT_KEY, showTileText ? '1' : '0'); redraw(); });
-appRoot.querySelector('#newGame')?.addEventListener('click', () => { state = createInitialState(); persist(); redraw(); });
-appRoot.querySelector('#undo')?.addEventListener('click', () => { if (undoMove(state)) { persist(); redraw(); } });
+appRoot.querySelector('#newGame')?.addEventListener('click', () => { latestScore = null; state = createInitialState(); persist(); redraw(); });
+appRoot.querySelector('#undo')?.addEventListener('click', () => { if (undoMove(state)) { latestScore = null; persist(); redraw(); } });
 
 appRoot.querySelectorAll<HTMLElement>('.market-tile').forEach((el) => {
     el.addEventListener('click', () => { state.selectedMarketIndex = Number(el.dataset.market); redraw(); });
@@ -48,6 +49,7 @@ appRoot.querySelectorAll<HTMLElement>('.cell').forEach((el) => {
       if (state.selectedMarketIndex === null) return;
       const res = applyMove(state, pos, state.selectedMarketIndex);
       if (!res) return;
+      latestScore = { player: state.currentPlayer === 0 ? 1 : 0, points: res.points, reasons: res.reasons, pos };
       onGameOverCheck();
       persist();
       previewPos = null;
