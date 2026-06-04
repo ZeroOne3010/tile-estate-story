@@ -4,6 +4,7 @@ const STATE_KEY = 'tileEstateStory.state';
 const SCORES_KEY = 'tileEstateStory.highScores';
 
 export interface HighScoreEntry {
+  seed?: number;
   date: string;
   p1: number;
   p2: number;

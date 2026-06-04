@@ -1,25 +1,78 @@
 import { BOARD_SIZE, cloneBoard, cloneTile, type Coord, type GameState, type ScoreBreakdown, type Tile, type TileType } from './model';
-import { createDeck, drawTiles } from './deck';
+import { createDeck, createSeededRng, drawTiles, shuffle } from './deck';
 
 const ORTHO = [[-1,0],[1,0],[0,-1],[0,1]] as const;
 const EIGHT = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]] as const;
 
-export function createInitialState(): GameState {
+export function randomSeed(): number {
+  return Math.floor(Math.random() * 90000) + 10000;
+}
+
+function distance(a: Coord, b: Coord): number {
+  return Math.abs(a.r - b.r) + Math.abs(a.c - b.c);
+}
+
+function sameCoord(a: Coord, b: Coord): boolean {
+  return a.r === b.r && a.c === b.c;
+}
+
+function chooseSpreadPosition(candidates: Coord[], occupied: Coord[]): Coord {
+  let bestDistance = -1;
+  let best = candidates[0];
+  for (const candidate of candidates) {
+    const nearest = Math.min(...occupied.map((position) => distance(candidate, position)));
+    if (nearest > bestDistance) {
+      bestDistance = nearest;
+      best = candidate;
+    }
+  }
+  return best;
+}
+
+export function createInitialState(seed: number = randomSeed()): GameState {
+  const rng = createSeededRng(seed);
   const board: Tile[][] = Array.from({ length: BOARD_SIZE }, () =>
     Array.from({ length: BOARD_SIZE }, () => ({ type: 'empty', level: 1 })),
   );
-  const busStops: [Coord, Coord] = [{ r: 1, c: 1 }, { r: 6, c: 6 }];
-  for (const p of busStops) board[p.r][p.c] = { type: 'busStop', level: 1, fixed: true };
-  board[1][2] = { type: 'residential', level: 1, fixed: true };
-  board[6][5] = { type: 'commercial', level: 1, fixed: true };
-  board[0][1] = { type: 'improvement', level: 1, fixed: true };
-  board[1][0] = { type: 'industrial', level: 1, fixed: true };
-  board[6][7] = { type: 'residential', level: 1, fixed: true };
-  board[7][6] = { type: 'industrial', level: 1, fixed: true };
+  const innerPositions = Array.from({ length: (BOARD_SIZE - 2) ** 2 }, (_, index) => ({
+    r: Math.floor(index / (BOARD_SIZE - 2)) + 1,
+    c: (index % (BOARD_SIZE - 2)) + 1,
+  }));
+  shuffle(innerPositions, rng);
+  const firstBus = innerPositions[0];
+  const secondBus = chooseSpreadPosition(innerPositions.slice(1), [firstBus]);
+  const busStops: [Coord, Coord] = [firstBus, secondBus];
+  for (const position of busStops) board[position.r][position.c] = { type: 'busStop', level: 1, fixed: true };
 
-  const deck = createDeck();
+  const starterTypes: TileType[] = ['residential', 'commercial', 'improvement', 'industrial', 'residential', 'industrial'];
+  shuffle(starterTypes, rng);
+  const occupied = [...busStops];
+  for (const busStop of busStops) {
+    const neighbors = orthoNeighbors(busStop).filter((position) => !occupied.some((used) => sameCoord(position, used)));
+    shuffle(neighbors, rng);
+    const position = neighbors[0];
+    occupied.push(position);
+    board[position.r][position.c] = { type: starterTypes.shift()!, level: 1, fixed: true };
+  }
+
+  const candidates = Array.from({ length: BOARD_SIZE ** 2 }, (_, index) => ({
+    r: Math.floor(index / BOARD_SIZE),
+    c: index % BOARD_SIZE,
+  })).filter((position) =>
+    !occupied.some((used) => sameCoord(position, used))
+    && !busStops.some((busStop) => distance(position, busStop) === 1),
+  );
+  shuffle(candidates, rng);
+  while (starterTypes.length > 0) {
+    const position = chooseSpreadPosition(candidates, occupied);
+    candidates.splice(candidates.findIndex((candidate) => sameCoord(candidate, position)), 1);
+    occupied.push(position);
+    board[position.r][position.c] = { type: starterTypes.shift()!, level: 1, fixed: true };
+  }
+
+  const deck = createDeck(rng);
   const market = drawTiles(deck, 3);
-  return { board, currentPlayer: 0, scores: [0,0], market, deck, selectedMarketIndex: null, lastGain: 0, lastGainPos: null, gameOver: false, busStops, history: [], playerNames: ['Player 1', 'Player 2'] };
+  return { seed, board, currentPlayer: 0, scores: [0,0], market, deck, selectedMarketIndex: null, lastGain: 0, lastGainPos: null, gameOver: false, busStops, history: [], playerNames: ['Player 1', 'Player 2'] };
 }
 
 function inBounds(r:number,c:number){return r>=0&&c>=0&&r<BOARD_SIZE&&c<BOARD_SIZE;}

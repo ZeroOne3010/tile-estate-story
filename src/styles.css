@@ -37,3 +37,5 @@ header h1{margin:0 0 4px;font-size:1.4rem}.controls{display:flex;gap:6px}.scores
 @media (min-width:700px){.layout{max-width:760px}}
 
 .tile-counts{margin-top:.5rem;font-size:.9rem;color:#334155}
+
+.seed,.score-seed{color:#64748b;opacity:.55;font-size:.75rem}.seed{text-align:center;padding:.25rem}
