@@ -67,7 +67,7 @@ export function render(
         ? `${t(lang, 'latestScore')}: ${latestScore.player === 0 ? p1Name : p2Name} +${latestScore.points}${latestScore.reasons.length ? ` (${latestScore.reasons.slice(0, 3).map((r) => reasonLabel(lang, r)).join(' + ')})` : ''}`
         : t(lang, 'latestScoreEmpty')
     }</section>
-    <section><h2>${t(lang,'market')}</h2><div id="market" class="market"></div><div class="tile-counts">${t(lang,'tileCounts')}: RES ${remainingCounts.residential}, COM ${remainingCounts.commercial}, IND ${remainingCounts.industrial}, IMP ${remainingCounts.improvement} (total ${state.deck.length})</div></section>
+    <section><h2>${t(lang,'market')}</h2><div id="market" class="market"></div><div class="tile-counts">${t(lang,'tileCounts')}: 🟩 ${tileLabel(lang, 'residential')} ${remainingCounts.residential}, 🟦 ${tileLabel(lang, 'commercial')} ${remainingCounts.commercial}, 🟨 ${tileLabel(lang, 'industrial')} ${remainingCounts.industrial}, 🟪 ${tileLabel(lang, 'improvement')} ${remainingCounts.improvement} (${t(lang, 'tileCountsTotal')} ${state.deck.length})</div></section>
     <section><h3>${t(lang,'highScores')}</h3><ol>${hs.map((e)=>`<li>${e.date}: ${e.p1}-${e.p2}</li>`).join('')}</ol></section>
   </main>`;
 
