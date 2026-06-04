@@ -1,8 +1,9 @@
 import './styles.css';
 import { detectLanguage, setLanguage } from './i18n';
-import { createInitialState, applyMove, previewScore, randomSeed, undoMove } from './rules';
+import { createInitialState, applyMove, previewScore, undoMove } from './rules';
 import { loadState, saveHighScore, saveState } from './storage';
 import type { Coord, GameState, Language } from './model';
+import { selectStartupState } from './startup';
 import { render } from './ui';
 
 const app = document.querySelector<HTMLDivElement>('#app');
@@ -17,9 +18,8 @@ function seedFromUrl(): number | null {
 }
 
 const requestedSeed = seedFromUrl();
-let state: GameState = requestedSeed === null ? (loadState() ?? createInitialState()) : createInitialState(requestedSeed);
+let state: GameState = selectStartupState(loadState(), requestedSeed);
 if (!state.playerNames) state.playerNames = ['Player 1', 'Player 2'];
-if (!Number.isInteger(state.seed)) state.seed = randomSeed();
 let lang: Language = detectLanguage();
 let previewPos: Coord | null = null;
 let latestScore: { player: 0 | 1; points: number; reasons: string[]; pos: Coord } | null = null;

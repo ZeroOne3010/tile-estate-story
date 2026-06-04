@@ -27,7 +27,7 @@ export interface MoveRecord {
 }
 
 export interface GameState {
-  seed: number;
+  seed?: number;
   board: Tile[][];
   currentPlayer: PlayerId;
   scores: [number, number];
