@@ -26,6 +26,7 @@ const dict = {
     enterPlayer1: 'Enter Player 1 name',
     enterPlayer2: 'Enter Player 2 name',
     tileCounts: 'Tiles left in deck',
+    tileCountsTotal: 'total',
   },
   fi: {
     title: 'Tile Estate Story', currentPlayer: 'Vuorossa', p1: 'Pelaaja 1', p2: 'Pelaaja 2',
@@ -50,6 +51,7 @@ const dict = {
     enterPlayer1: 'Anna Pelaaja 1 nimi',
     enterPlayer2: 'Anna Pelaaja 2 nimi',
     tileCounts: 'Pakassa jäljellä olevat laatat',
+    tileCountsTotal: 'yhteensä',
   },
 } as const;
 
