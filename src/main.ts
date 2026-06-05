@@ -3,13 +3,22 @@ import { detectLanguage, setLanguage } from './i18n';
 import { createInitialState, applyMove, previewScore, undoMove } from './rules';
 import { loadState, saveHighScore, saveState } from './storage';
 import type { Coord, GameState, Language } from './model';
+import { selectStartupState } from './startup';
 import { render } from './ui';
 
 const app = document.querySelector<HTMLDivElement>('#app');
 if (!app) throw new Error('App root missing');
 const appRoot: HTMLElement = app;
 
-let state: GameState = loadState() ?? createInitialState();
+function seedFromUrl(): number | null {
+  const raw = new URLSearchParams(window.location.search).get('seed');
+  if (!raw || !/^\d+$/.test(raw)) return null;
+  const seed = Number(raw);
+  return Number.isSafeInteger(seed) && seed <= 0xffffffff ? seed : null;
+}
+
+const requestedSeed = seedFromUrl();
+let state: GameState = selectStartupState(loadState(), requestedSeed);
 if (!state.playerNames) state.playerNames = ['Player 1', 'Player 2'];
 let lang: Language = detectLanguage();
 let previewPos: Coord | null = null;
@@ -30,13 +39,23 @@ function redraw() {
 function onGameOverCheck() {
   if (!state.gameOver) return;
   const winner = state.scores[0] === state.scores[1] ? 'tie' : (state.scores[0] > state.scores[1] ? 'p1' : 'p2');
-  saveHighScore({ date: new Date().toISOString().slice(0,10), p1: state.scores[0], p2: state.scores[1], winner, lang });
+  saveHighScore({ date: new Date().toISOString().slice(0,10), p1: state.scores[0], p2: state.scores[1], winner, lang, seed: state.seed });
 }
 
 function bindEvents() {
 appRoot.querySelector('#lang')?.addEventListener('click', () => { lang = lang === 'en' ? 'fi' : 'en'; setLanguage(lang); redraw(); });
 appRoot.querySelector('#toggleTileText')?.addEventListener('click', () => { showTileText = !showTileText; localStorage.setItem(TILE_TEXT_KEY, showTileText ? '1' : '0'); redraw(); });
-appRoot.querySelector('#newGame')?.addEventListener('click', () => { const existingNames = [...state.playerNames] as [string, string]; latestScore = null; state = createInitialState(); state.playerNames = existingNames; persist(); redraw(); });
+appRoot.querySelector('#newGame')?.addEventListener('click', () => {
+  const existingNames = [...state.playerNames] as [string, string];
+  latestScore = null;
+  state = createInitialState();
+  state.playerNames = existingNames;
+  const url = new URL(window.location.href);
+  url.searchParams.delete('seed');
+  window.history.replaceState({}, '', url);
+  persist();
+  redraw();
+});
 appRoot.querySelector('#setPlayers')?.addEventListener('click', () => {
   const p1 = prompt(lang === 'fi' ? 'Anna Pelaaja 1 nimi' : 'Enter Player 1 name', state.playerNames[0])?.trim();
   const p2 = prompt(lang === 'fi' ? 'Anna Pelaaja 2 nimi' : 'Enter Player 2 name', state.playerNames[1])?.trim();

@@ -13,11 +13,13 @@ Tile Estate Story is a browser-only, local 2-player turn-based tile placement ga
 ## Current rules
 - Tile types: residential, commercial, industrial, improvement, bus stop.
 - Market deck: residential 18, commercial 16, industrial 14, improvement 8.
-- Seeded board includes 2 linked bus stops and two starter development tiles.
+- Seeded board includes 2 linked bus stops, one starter touching each stop, and four spread-out starter tiles.
 - Orthogonal adjacency for scoring; 8-neighborhood for upgrades.
 - Upgrade triggers at 4+ occupied 8-neighbors.
 - Upgraded neighbors add +1 bonus when contributing score.
 - Bus stop pair extends positive orthogonal neighbors across the linked stop.
+
+A specific starting position can be opened with `?seed=12345`. New games otherwise use a random five-digit seed.
 
 ## Run locally
 ```bash
@@ -48,9 +50,9 @@ Place optional PNG assets under `public/assets/tiles/`:
 If files are missing, fallback colored tiles and short labels render automatically.
 
 ## localStorage usage
-- `tileEstateStory.state`: full game state persistence (board, market, scores, turn, history).
+- `tileEstateStory.state`: full game state persistence (seed, board, market, scores, turn, history).
 - `tileEstateStory.language`: selected UI language (`en` or `fi`).
-- `tileEstateStory.highScores`: top 10 completed game results.
+- `tileEstateStory.highScores`: top 10 completed game results, including their seeds.
 
 ## Known TODOs
 - Add unit tests for `rules.ts` scoring and bus-stop transfer logic.

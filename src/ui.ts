@@ -68,7 +68,8 @@ export function render(
         : t(lang, 'latestScoreEmpty')
     }</section>
     <section><h2>${t(lang,'market')}</h2><div id="market" class="market"></div><div class="tile-counts">${t(lang,'tileCounts')}: 🟩 ${tileLabel(lang, 'residential')} ${remainingCounts.residential}, 🟦 ${tileLabel(lang, 'commercial')} ${remainingCounts.commercial}, 🟨 ${tileLabel(lang, 'industrial')} ${remainingCounts.industrial}, 🟪 ${tileLabel(lang, 'improvement')} ${remainingCounts.improvement} (${t(lang, 'tileCountsTotal')} ${state.deck.length})</div></section>
-    <section><h3>${t(lang,'highScores')}</h3><ol>${hs.map((e)=>`<li>${e.date}: ${e.p1}-${e.p2}</li>`).join('')}</ol></section>
+    <section><h3>${t(lang,'highScores')}</h3><ol>${hs.map((e)=>`<li>${e.date}: ${e.p1}-${e.p2}${e.seed === undefined ? '' : ` <span class=\"score-seed\">#${e.seed}</span>`}</li>`).join('')}</ol></section>
+    ${state.seed === undefined ? '' : `<footer class="seed">#${state.seed}</footer>`}
   </main>`;
 
   const boardEl = app.querySelector('#board') as HTMLElement;
