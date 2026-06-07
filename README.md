@@ -59,3 +59,6 @@ If files are missing, fallback colored tiles and short labels render automatical
 - Improve scoring breakdown text localization and clarity.
 - Add animation/sound polish and accessibility improvements.
 - Add richer high-score metadata (duration, move count).
+
+---
+✨ Made with vibes ✨
